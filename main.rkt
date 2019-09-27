@@ -8,7 +8,8 @@
 
 ;I've implemented some (but not all) rules
 ;from: https://www.grammarly.com/blog/plural-nouns/
-(define (plural n)
+(define (plural whatever)
+  (define s (~a whatever))
   (define no-change '("deer" "sheep" "series" "species"))
   (define weird-plurals
     (hash
@@ -20,25 +21,25 @@
       "mouse" "mice"
       "person" "people"))
   (cond
-    [(member n no-change) n]
-    [(hash-has-key? weird-plurals n) 
-     (hash-ref weird-plurals n)]
-    [(or/suffix? n "ss" "sh" "ch" "x")
-     (~a n "es")]
-    [(or/suffix? n "f")
-     (replace-suffix n "f" "ves")]
-    [(or/suffix? n "fe")
-     (replace-suffix n "fe" "ves")]
-    [(or/suffix? n "o")
-     (replace-suffix n "o" "oes")]
-    [(and (or/suffix? n "y")
-          (is-consonant? (second-to-last-letter n)))
-     (replace-suffix n "y" "ies")]
-    [(or/suffix? n "is")
-     (replace-suffix n "is" "es")]
-    [(or/suffix? n "on")
-     (replace-suffix n "on" "a")]
-    [else (~a n "s")]))
+    [(member s no-change) s]
+    [(hash-has-key? weird-plurals s) 
+     (hash-ref weird-plurals s)]
+    [(or/suffix? s "ss" "sh" "ch" "x")
+     (~a s "es")]
+    [(or/suffix? s "f")
+     (replace-suffix s "f" "ves")]
+    [(or/suffix? s "fe")
+     (replace-suffix s "fe" "ves")]
+    [(or/suffix? s "o")
+     (replace-suffix s "o" "oes")]
+    [(and (or/suffix? s "y")
+          (is-consonant? (second-to-last-letter s)))
+     (replace-suffix s "y" "ies")]
+    [(or/suffix? s "is")
+     (replace-suffix s "is" "es")]
+    [(or/suffix? s "on")
+     (replace-suffix s "on" "a")]
+    [else (~a s "s")]))
 
 (define (replace-suffix s suffix replacement)
   (regexp-replace (pregexp (~a suffix "$")) 
