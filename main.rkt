@@ -10,7 +10,7 @@
 ;from: https://www.grammarly.com/blog/plural-nouns/
 (define (plural whatever)
   (define s (~a whatever))
-  (define no-change '("deer" "sheep" "series" "species"))
+  (define no-change '("deer" "sheep" "series" "species" "broccoli"))
   (define weird-plurals
     (hash
       "child" "children"
@@ -19,8 +19,11 @@
       "woman" "women"
       "tooth" "teeth"
       "mouse" "mice"
-      "person" "people"))
+      "person" "people"
+      "phenomenon" "phenomena"
+      ))
   (cond
+    [(already-plural? s) s]
     [(member s no-change) s]
     [(hash-has-key? weird-plurals s) 
      (hash-ref weird-plurals s)]
@@ -37,9 +40,11 @@
      (replace-suffix s "y" "ies")]
     [(or/suffix? s "is")
      (replace-suffix s "is" "es")]
-    [(or/suffix? s "on")
-     (replace-suffix s "on" "a")]
     [else (~a s "s")]))
+
+;Is this safe?  Idk.  English sucks.
+(define (already-plural? s)
+  (or/suffix? s "es"))
 
 (define (replace-suffix s suffix replacement)
   (regexp-replace (pregexp (~a suffix "$")) 
