@@ -21,6 +21,8 @@
       "mouse" "mice"
       "person" "people"
       "phenomenon" "phenomena"
+      "ufo" "ufos"
+      "UFO" "UFOs"
       ))
   (cond
     [(already-plural? s) s]
