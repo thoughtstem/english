@@ -68,7 +68,9 @@
   (is-vowel? (substring (~a w) 0 1)))
 
 (define (a/an noun)
-  (if (starts-with-vowel? (~a noun))
+  (if (and (starts-with-vowel? (~a noun))
+           (not (and (>= (string-length (~a noun)) 3)
+                     (equal? (string-downcase (substring (~a noun) 0 3)) "ufo"))))
     (english "an" noun) 
     (english "a" noun)))
 
