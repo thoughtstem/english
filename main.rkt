@@ -23,6 +23,7 @@
       "phenomenon" "phenomena"
       "ufo" "ufos"
       "UFO" "UFOs"
+      "mewtwo" "mewtwos"
       ))
   (cond
     [(already-plural? s) s]
