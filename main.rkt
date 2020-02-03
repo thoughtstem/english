@@ -89,10 +89,12 @@
     [1 (first things)]
     [2 (english (first things) "and" (second things))]
     [_ (apply english 
-              (append 
+              #;(append 
                 (add-between (take things (sub1 (length things)))
                              ",") 
-                (list "and" (last things))))]))
+                (list "and" (last things)))
+              (add-between things "," #:before-last ", and")
+              )]))
 
 (define (numbered things)
   (define i 0)
