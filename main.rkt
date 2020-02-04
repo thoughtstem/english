@@ -43,6 +43,10 @@
      (replace-suffix s "y" "ies")]
     [(or/suffix? s "is")
      (replace-suffix s "is" "es")]
+    [(string-contains? s " ")
+     (let ([last-word (last (string-split s))])
+       (~a (string-trim #:left? #f s last-word)
+           (plural last-word)))]
     [else (~a s "s")]))
 
 ;Is this safe?  Idk.  English sucks.
