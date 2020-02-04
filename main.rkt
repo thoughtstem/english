@@ -24,8 +24,13 @@
       "ufo" "ufos"
       "UFO" "UFOs"
       "mewtwo" "mewtwos"
+      "two" "twos"
       ))
   (cond
+    [(string-contains? s " ")
+     (let ([last-word (last (string-split s))])
+       (~a (string-trim #:left? #f s last-word)
+           (plural last-word)))]
     [(already-plural? s) s]
     [(member s no-change) s]
     [(hash-has-key? weird-plurals s) 
@@ -43,10 +48,7 @@
      (replace-suffix s "y" "ies")]
     [(or/suffix? s "is")
      (replace-suffix s "is" "es")]
-    [(string-contains? s " ")
-     (let ([last-word (last (string-split s))])
-       (~a (string-trim #:left? #f s last-word)
-           (plural last-word)))]
+    
     [else (~a s "s")]))
 
 ;Is this safe?  Idk.  English sucks.
