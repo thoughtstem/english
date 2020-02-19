@@ -2,6 +2,7 @@
 
 (provide english
          plural
+         singular
          a/an
          list-of
          itemize)
@@ -51,9 +52,53 @@
     
     [else (~a s "s")]))
 
+(define (singular whatever)
+  (define s (~a whatever))
+  (define no-change '("deer" "sheep" "series" "species" "broccoli"))
+  (define weird-plurals
+    (hash
+     "children" "child"
+     "geese" "goose"
+     "men" "man"
+     "women" "woman"
+     "teeth" "tooth"
+     "mice" "mouse"
+     "people" "person"
+     "phenomena" "phenomenon"
+     "ufos" "ufo"
+     "UFOs" "UFO"
+     "mewtwos" "mewtwo"
+     "twos" "two"
+     "buses" "bus"
+     "fezzes" "fez"
+     "gasses" "gas"
+      ))
+  (cond
+    [(string-contains? s " ")
+     (let ([last-word (last (string-split s))])
+       (~a (string-trim #:left? #f s last-word)
+           (singular last-word)))]
+    [(member s no-change) s]
+    [(hash-has-key? weird-plurals s) 
+     (hash-ref weird-plurals s)]
+    [(and (or/suffix? s "es")
+          (or/suffix? (replace-suffix s "es" "") "ss" "sh" "ch" "x" "z"))
+     (replace-suffix s "es" "")]
+    [(or/suffix? s "ves")
+     (if (is-consonant? (~a (last (string->list (replace-suffix s "ves" "")))))
+         (replace-suffix s "ves" "f")
+         (replace-suffix s "ves" "fe"))]
+    [(or/suffix? s "ies")
+     (replace-suffix s "ies" "y")]
+    [(already-singular? s) s]
+    [else (replace-suffix s "s" "")]))
+
 ;Is this safe?  Idk.  English sucks.
 (define (already-plural? s)
   (or/suffix? s "es"))
+
+(define (already-singular? s)
+  (not (or/c s "es" "s")))
 
 (define (replace-suffix s suffix replacement)
   (regexp-replace (pregexp (~a suffix "$")) 
