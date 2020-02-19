@@ -26,17 +26,20 @@
       "UFO" "UFOs"
       "mewtwo" "mewtwos"
       "two" "twos"
+      "fez" "fezzes"
+      "gas" "gasses"
       ))
   (cond
     [(string-contains? s " ")
      (let ([last-word (last (string-split s))])
        (~a (string-trim #:left? #f s last-word)
            (plural last-word)))]
-    [(already-plural? s) s]
+    [(or (member s (hash-values weird-plurals))
+         (already-plural? s)) s]       ;JL: maybe move this down to catch special cases first or improve the function
     [(member s no-change) s]
     [(hash-has-key? weird-plurals s) 
      (hash-ref weird-plurals s)]
-    [(or/suffix? s "ss" "sh" "ch" "x")
+    [(or/suffix? s "s" "ss" "sh" "ch" "x" "z")
      (~a s "es")]
     [(or/suffix? s "f")
      (replace-suffix s "f" "ves")]
@@ -72,13 +75,15 @@
      "buses" "bus"
      "fezzes" "fez"
      "gasses" "gas"
+     "walruses" "walrus"
       ))
   (cond
     [(string-contains? s " ")
      (let ([last-word (last (string-split s))])
        (~a (string-trim #:left? #f s last-word)
            (singular last-word)))]
-    [(member s no-change) s]
+    [(or (member s (hash-values weird-plurals))
+         (member s no-change)) s]
     [(hash-has-key? weird-plurals s) 
      (hash-ref weird-plurals s)]
     [(and (or/suffix? s "es")
@@ -94,11 +99,15 @@
     [else (replace-suffix s "s" "")]))
 
 ;Is this safe?  Idk.  English sucks.
+;JL: attempting to improve by checking if it ends in s (but not ss) and preceded by a consonant
 (define (already-plural? s)
-  (or/suffix? s "es"))
+  (or (or/suffix? s "es")
+      (and (or/suffix? s "s")
+           (not (or/suffix? s "ss")))))
 
 (define (already-singular? s)
-  (not (or/c s "es" "s")))
+  (or (or/suffix? s "ss" "us")
+      (not (or/suffix? s "es" "s"))))
 
 (define (replace-suffix s suffix replacement)
   (regexp-replace (pregexp (~a suffix "$")) 
