@@ -98,7 +98,7 @@
     [(already-singular? s) s]
     [else (replace-suffix s "s" "")]))
 
-;Is this safe?  Idk.  English sucks.
+;SF: Is this safe?  Idk.  English sucks.
 ;JL: attempting to improve by checking if it ends in s (but not ss) and preceded by a consonant
 (define (already-plural? s)
   (or (or/suffix? s "es")
